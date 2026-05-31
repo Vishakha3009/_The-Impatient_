@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vishakha's Little Adventure ❤️</title>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<style>
+:root {
+--bg-color: #fff0f3;
+--primary-pink: #ff4d6d;
+--secondary-pink: #ff758f;
+--light-pink: #ffb3c1;
+--pale-pink: #ffccd5;
+--dark-text: #590d22;
+--card-bg: #ffffff;
+}
+
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+background-color: var(--bg-color);
+color: var(--dark-text);
+display: flex;
+justify-content: center;
+align-items: center;
+min-height: 100vh;
+padding: 20px;
+overflow-x: hidden;
+position: relative;
+}
+
+.adventure-container {
+width: 100%;
+max-width: 500px;
+background: var(--card-bg);
+border-radius: 24px;
+box-shadow: 0 10px 30px rgba(255, 77, 109, 0.15);
+padding: 30px;
+text-align: center;
+position: relative;
+overflow: hidden;
+border: 2px solid var(--pale-pink);
+transition: all 0.4s ease;
+z-index: 10;
+}
+
+/* Progress Bar */
+.progress-container {
+width: 100%;
+background-color: var(--pale-pink);
+height: 8px;
+border-radius: 4px;
+margin-bottom: 25px;
+display: none;
+overflow: hidden;
+}
+
+.progress-bar {
+height: 100%;
+background: linear-gradient(90deg, var(--primary-pink), var(--secondary-pink));
+width: 0%;
+transition: width 0.4s ease;
+border-radius: 4px;
+}
+
+/* Screen States */
+.screen {
+display: none;
+animation: fadeIn 0.5s ease forwards;
+}
+
+.screen.active {
+display: block;
+}
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(15px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+/* Typography & Visuals */
+h1 {
+color: var(--primary-pink);
+font-size: 26px;
+margin-bottom: 15px;
+}
+
+h2 {
+color: var(--primary-pink);
+font-size: 22px;
+margin-bottom: 20px;
+font-weight: 600;
+}
+
+p {
+font-size: 16px;
+line-height: 1.6;
+margin-bottom: 25px;
+color: #6c2d3b;
+}
+
+.avatar-img {
+font-size: 60px;
+margin-bottom: 15px;
+display: inline-block;
+animation: bounce 2s infinite alternate;
+}
+
+@keyframes bounce {
+0% { transform: translateY(0); }
+100% { transform: translateY(-10px); }
+}
+
+/* Buttons & Options */
+.btn-primary {
+background: linear-gradient(135deg, var(--primary-pink), var(--secondary-pink));
+color: white;
+border: none;
+padding: 14px 28px;
+font-size: 16px;
+font-weight: bold;
+border-radius: 30px;
+cursor: pointer;
+box-shadow: 0 5px 15px rgba(255, 77, 109, 0.3);
+transition: all 0.3s ease;
+display: inline-flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+}
+
+.btn-primary:hover {
+transform: translateY(-2px);
+box-shadow: 0 8px 20px rgba(255, 77, 109, 0.4);
+}
+
+.btn-primary:active {
+transform: translateY(1px);
+}
+
+.options-grid {
+display: flex;
+flex-direction: column;
+gap: 12px;
+margin-bottom: 25px;
+}
+
+.option-card {
+background-color: #fffafb;
+border: 2px solid var(--pale-pink);
+border-radius: 16px;
+padding: 16px;
+font-size: 16px;
+text-align: left;
+cursor: pointer;
+transition: all 0.25s ease;
+color: var(--dark-text);
+font-weight: 500;
+display: flex;
+align-items: center;
+}
+
+.option-card:hover {
+border-color: var(--secondary-pink);
+background-color: #fff0f3;
+transform: scale(1.01);
+}
+
+.option-card.selected {
+background-color: var(--primary-pink);
+border-color: var(--primary-pink);
+color: white;
+box-shadow: 0 4px 12px rgba(255, 77, 109, 0.2);
+}
+
+/* Question Counter */
+.q-counter {
+font-size: 13px;
+font-weight: bold;
+text-transform: uppercase;
+letter-spacing: 1px;
+color: var(--secondary-pink);
+margin-bottom: 8px;
+}
+
+/* Summary & Results Table */
+.summary-box {
+background: #fffafb;
+border: 2px solid var(--pale-pink);
+border-radius: 16px;
+padding: 15px;
+margin: 20px 0;
+max-height: 300px;
+overflow-y: auto;
+text-align: left;
+}
+
+.summary-item {
+padding: 10px 0;
+border-bottom: 1px dashed var(--pale-pink);
+font-size: 14px;
+}
+
+.summary-item:last-child {
+border-bottom: none;
+}
+
+.summary-q {
+font-weight: bold;
+color: var(--primary-pink);
+margin-bottom: 3px;
+}
+
+.summary-a {
+color: var(--dark-text);
+padding-left: 5px;
+}
+
+/* Background Floating Hearts */
+.floating-heart {
+position: absolute;
+pointer-events: none;
+opacity: 0.2;
+animation: floatUp 4s linear forwards;
+color: var(--primary-pink);
+z-index: 1;
+}
+
+@keyframes floatUp {
+0% { transform: translateY(100vh) scale(0.5); opacity: 0.2; }
+90% { opacity: 0.2; }
+100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="adventure-container" id="container">
+<div class="progress-container" id="progressContainer">
+<div class="progress-bar" id="progressBar"></div>
+</div>
+
+<div class="screen active" id="welcomeScreen">
+<div class="avatar-img">❤️</div>
+<h1>Hi Chichu 👋</h1>
+<p>Instead of asking a hundred questions on WhatsApp, I thought I’d create a tiny adventure.<br><br>Let’s see where it takes us ❤️</p>
+<button class="btn-primary" onclick="startAdventure()">Start the Adventure →</button>
+</div>
+
+<div class="screen" id="questionScreen">
+<div class="q-counter" id="questionCounter">Question 1 of 10</div>
+<h2 id="questionTitle">Question text</h2>
+<div class="options-grid" id="optionsGrid">
+</div>
+</div>
+
+<div class="screen" id="finalScreen">
+<div class="avatar-img">🎉</div>
+<h1>Congratulations Chichu 🎉</h1>
+<p>You’ve successfully completed Vishakha’s Little Adventure!<br><br>I’ve officially learned a little more about you today.<br><br>Now comes the important part…</p>
+<h2>Pick A Date 📅❤️</h2>
+<div class="options-grid" id="dateOptionsGrid">
+<div class="option-card" onclick="selectDateOption(this, '🌸 Coffee Date')">🌸 Coffee Date</div>
+<div class="option-card" onclick="selectDateOption(this, '🍽️ Dinner Date')">🍽️ Dinner Date</div>
+<div class="option-card" onclick="selectDateOption(this, '🎬 Movie Date')">🎬 Movie Date</div>
+<div class="option-card" onclick="selectDateOption(this, '🚶 Long Walk & Endless Conversations')">🚶 Long Walk & Endless Conversations</div>
+</div>
+<button class="btn-primary" id="confirmDateBtn" onclick="confirmDate()" style="margin-top: 10px;">👉 Confirm My Date</button>
+</div>
+
+<div class="screen" id="successScreen">
+<div class="avatar-img">✨</div>
+<h1>🎉 Adventure Completed!</h1>
+<p>Thank you for being a good sport and answering all the questions.<br><br>Now Vishakha is looking forward to meeting you and collecting the remaining answers in person. ❤️</p>
+<div style="background-color: #fff0f3; padding: 15px; border-radius: 12px; font-size: 14px; border-left: 4px solid var(--primary-pink); text-align: left; margin-bottom: 25px;">
+<strong>Warning:</strong> Additional questioning may continue over chai and snacks. 😄
+</div>
+<button class="btn-primary" onclick="showSummaryPage()">See Your Responses 📋</button>
+</div>
+
+<div class="screen" id="summaryScreen">
+<div class="avatar-img">📋</div>
+<h1>Chichu's Notebook</h1>
+<p>Here is a recap of everything you chose during your little adventure:</p>
+<div class="summary-box" id="summaryBox">
+</div>
+<p style="font-size: 14px; margin-top: 15px; font-style: italic;">Take a screenshot and send it back to Vishakha! 😉</p>
+<button class="btn-primary" onclick="restartAdventure()" style="margin-top: 10px;">Play Again 🔄</button>
+</div>
+</div>
+
+<script>
+// Questions Data Database
+const questions = [
+{
+question: "Which one sounds most like you?",
+options: ["🌿 Thoughtful & Calm", "✈️ Adventurous & Spontaneous", "🎨 Creative & Dreamy", "😄 Fun & Playful"]
+},
+{
+question: "Choose your culinary destiny 🍽️",
+options: ["🍛 Indian Food", "🥗 Strictly Diet Food", "👑 Vishakha’s Opinion Can Be Considered"]
+},
+{
+question: "What matters most to you in a relationship? ❤️",
+options: ["🤝 Trust", "💬 Communication", "🌱 Growing Together", "🙏 Respect", "⭐ Shared Values", "🛡️ Loyalty"]
+},
+{
+question: "What should we talk about on our first meeting? ☕",
+options: ["🇺🇸 USA Life (Pros & Cons)", "✈️ How To Explore Europe", "🔴 Why RCB Has The Greatest Fanbase In IPL", "🔵 How MI’s Downfall Started"]
+},
+{
+question: "Which song can you listen to anytime? 🎵",
+options: ["🎶 Eka Dajiba Eka Dajiba", "🕺 Rasputin", "🚪 Knock Knock", "🎧 Slow Motion Angreza"]
+},
+{
+question: "Which show/movie do you like most? 🍿",
+options: ["💘 Splitsvilla", "⚔️ Demon Slayer", "🏃 Bhaag Milkha Bhaag", "❤️ Romantic Movie"]
+},
+{
+question: "If I visit the USA, what would you offer me for breakfast? 🇺🇸🥞",
+options: ["🥣 Oats", "🌮 Pav Bhaji", "☕ Chai With Chapati", "🍔 Junk Food"]
+},
+{
+question: "Which quality would instantly make you reject someone? 🚩",
+options: ["😶 Not Being Cute", "😐 Not Being Funny", "🏏 Being An RCB Hater", "⚡ Not Matching My Energy"]
+},
+{
+question: "What’s your green flag? ✨",
+options: ["😄 I can make people laugh", "🍕 I never say no to food", "🤝 I’m loyal to my people", "🎯 I keep my promises"]
+},
+{
+question: "One thing you would never get bored of? 😄",
+options: ["😂 Laughing", "🍕 Eating", "🌍 Travelling", "💬 Endless Conversations"]
+}
+];
+
+let currentQuestionIndex = 0;
+let userResponses = [];
+let selectedDate = "";
+
+// Screen Selectors
+const welcomeScreen = document.getElementById('welcomeScreen');
+const questionScreen = document.getElementById('questionScreen');
+const finalScreen = document.getElementById('finalScreen');
+const successScreen = document.getElementById('successScreen');
+const summaryScreen = document.getElementById('summaryScreen');
+
+const progressContainer = document.getElementById('progressContainer');
+const progressBar = document.getElementById('progressBar');
+const questionCounter = document.getElementById('questionCounter');
+const questionTitle = document.getElementById('questionTitle');
+const optionsGrid = document.getElementById('optionsGrid');
+
+// Initial setup for background hearts
+createHeartShower();
+
+function startAdventure() {
+welcomeScreen.classList.remove('active');
+questionScreen.classList.add('active');
+progressContainer.style.display = 'block';
+currentQuestionIndex = 0;
+userResponses = [];
+loadQuestion();
+}
+
+function loadQuestion() {
+const currentQ = questions[currentQuestionIndex];
+questionCounter.innerText = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+questionTitle.innerText = currentQ.question;
+
+// Progress tracker logic
+const progressPercent = (currentQuestionIndex / questions.length) * 100;
+progressBar.style.width = `${progressPercent}%`;
+
+optionsGrid.innerHTML = '';
+
+currentQ.options.forEach(option => {
+const card = document.createElement('div');
+card.className = 'option-card';
+card.innerText = option;
+card.onclick = () => handleOptionSelection(option, card);
+optionsGrid.appendChild(card);
+});
+}
+
+function handleOptionSelection(selectedOption, cardElement) {
+cardElement.classList.add('selected');
+
+userResponses.push({
+question: questions[currentQuestionIndex].question,
+answer: selectedOption
+});
+
+// Brief delay for transition feedback smoothness
+setTimeout(() => {
+currentQuestionIndex++;
+if (currentQuestionIndex < questions.length) {
+loadQuestion();
+} else {
+progressBar.style.width = '100%';
+showFinalPage();
+}
+}, 350);
+}
+
+function showFinalPage() {
+questionScreen.classList.remove('active');
+progressContainer.style.display = 'none';
+finalScreen.classList.add('active');
+selectedDate = ""; 
+
+const dateCards = document.querySelectorAll('#dateOptionsGrid .option-card');
+dateCards.forEach(c => c.classList.remove('selected'));
+}
+
+function selectDateOption(element, value) {
+const dateCards = document.querySelectorAll('#dateOptionsGrid .option-card');
+dateCards.forEach(c => c.classList.remove('selected'));
+element.classList.add('selected');
+selectedDate = value;
+}
+
+function confirmDate() {
+if (!selectedDate) {
+alert("Please select a date option! 🥰");
+return;
+}
+
+finalScreen.classList.remove('active');
+successScreen.classList.add('active');
+
+// Trigger Canvas Confetti Explosion
+if(typeof confetti === 'function') {
+confetti({
+particleCount: 150,
+spread: 80,
+origin: { y: 0.6 },
+colors: ['#ff4d6d', '#ff758f', '#ffb3c1', '#ffffff']
+});
+}
+}
+
+function showSummaryPage() {
+successScreen.classList.remove('active');
+summaryScreen.classList.add('active');
+
+const summaryBox = document.getElementById('summaryBox');
+summaryBox.innerHTML = '';
+
+// Generate responses matching structure layout
+userResponses.forEach((item, index) => {
+const entry = document.createElement('div');
+entry.className = 'summary-item';
+entry.innerHTML = `
+<div class="summary-q">Q${index + 1}: ${item.question}</div>
+<div class="summary-a">✨ ${item.answer}</div>
+`;
+summaryBox.appendChild(entry);
+});
+
+// Append date preference outcome
+const dateEntry = document.createElement('div');
+dateEntry.className = 'summary-item';
+dateEntry.style.borderTop = '2px solid var(--light-pink)';
+dateEntry.style.marginTop = '10px';
+dateEntry.style.paddingTop = '10px';
+dateEntry.innerHTML = `
+<div class="summary-q" style="color: var(--dark-text);">📅 Chosen Date Plan:</div>
+<div class="summary-a" style="font-weight: bold; color: var(--primary-pink); font-size: 16px;">${selectedDate}</div>
+`;
+summaryBox.appendChild(dateEntry);
+}
+
+function restartAdventure() {
+summaryScreen.classList.remove('active');
+welcomeScreen.classList.add('active');
+}
+
+// Background Decorative floating engine
+function createHeartShower() {
+setInterval(() => {
+const heart = document.createElement('div');
+heart.className = 'floating-heart';
+heart.innerText = ['❤️', '💖', '🌸', '✨'][Math.floor(Math.random() * 4)];
+heart.style.left = Math.random() * 100 + 'vw';
+heart.style.fontSize = Math.random() * 20 + 15 + 'px';
+heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+document.body.appendChild(heart);
+
+setTimeout(() => {
+heart.remove();
+}, 4000);
+}, 700);
+}
+</script>
+</body>
+</html>
